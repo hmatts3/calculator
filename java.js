@@ -27,24 +27,24 @@ let operator;
 for (let i = 0; i<operatorButtons.length; i++) {
     operatorButtons[i].addEventListener('click', () => {
         if (num1===undefined && operator===undefined) {
-        num1 = parseFloat(displayValue);
-        displayValue = '';
-        operator = `${operatorButtons[i].id}`;
-        highlightOperator(i);
-        }
+            num1 = parseFloat(displayValue);
+            displayValue = '';
+            operator = `${operatorButtons[i].id}`;
+            highlightOperator(i);
+            }
         else if (num1!=undefined && num2===undefined && operator!=undefined) {
-        num2 = parseFloat(displayValue);
-        displayValue = '';
-        operate(operator, num1, num2);
-        operator=`${operatorButtons[i].id}`;
-        highlightOperator(i);
-        }
+            num2 = parseFloat(displayValue);
+            displayValue = '';
+            operate(operator, num1, num2);
+            operator=`${operatorButtons[i].id}`;
+            highlightOperator(i);
+            }
         else {
-        displayValue = '';
-        operator = `${operatorButtons[i].id}`;
-        highlightOperator(i);
-        };
-    });
+            displayValue = '';
+            operator = `${operatorButtons[i].id}`;
+            highlightOperator(i);
+            };
+    })        
 };
 
 function highlightOperator(i) {
@@ -74,31 +74,76 @@ clearButton.addEventListener('click', () => {
     num1=undefined;
     num2=undefined;
     operator=undefined;
+    unhighlightOperator();
 });
 
 function operate(sign,a,b) {
     if (sign === '/') {
         a /= b;
-        display.textContent = Number(a.toFixed(5));
-        displayValue ='';
     }
     else if (sign === '+') {
         a += num2;
-        display.textContent = Number(a.toFixed(5));
-        displayValue ='';
     }
     else if (sign === '-') {
         a -= num2;
-        display.textContent = Number(a.toFixed(5));
-        displayValue ='';
+        
     }
     else if (sign === '*') {
         a *= num2;
-        display.textContent = Number(a.toFixed(5));
-        displayValue ='';
     };
+    display.textContent = Number(a.toFixed(5));
+    displayValue='';
     unhighlightOperator();
     num1 = a;
     num2=undefined;
     operator=undefined;
 };
+
+
+
+
+// keyboard
+
+document.addEventListener('keydown', (event) => {    
+    if (event.key>=0 && event.key<=10) { 
+    display.textContent = displayValue += event.key;
+    unhighlightOperator();
+    }
+    else if (event.key === '+' || event.key === '-' || event.key === '*' || event.key === '/') {
+        let operatorKeyed;
+        if (event.key==='+') {
+            operatorKeyed = document.querySelector(`#plus`);
+        }
+        else if (event.key==='-') {
+            operatorKeyed = document.querySelector(`#minus`);
+        }
+        else if (event.key==='*') {
+            operatorKeyed = document.querySelector(`#times`);
+        }
+        else if (event.key==='/') {
+            operatorKeyed = document.querySelector(`#divide`);
+        };
+        if (num1===undefined && operator===undefined) {
+            num1 = parseFloat(displayValue);
+            displayValue = '';
+            operator = `${event.key}`;
+            }
+        else if (num1!=undefined && num2===undefined && operator!=undefined) {
+            num2 = parseFloat(displayValue);
+            displayValue = '';
+            operate(operator, num1, num2);
+            operator=`${event.key}`;
+            }
+        else {
+            displayValue = '';
+            operator = `${event.key}`;
+            };
+        operatorKeyed.classList.add('selected');
+        operatorKeyed.classList.remove('operator');
+    }
+    else if (event.key==='=' || event.key === 'Enter') {
+        num2 = parseFloat(displayValue);
+        displayValue='';
+        operate(operator, num1, num2);
+    };
+    });
