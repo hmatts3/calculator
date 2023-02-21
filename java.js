@@ -10,84 +10,60 @@ let currentValue;
 
 for (let i = 0; i<numberButtons.length; i++) {
     numberButtons[i].addEventListener('click', () => {
+        unhighlightOperator();
         display.textContent = displayValue += `${numberButtons[i].id}`;
     });
 };
 
 let num1;
 let num2;
+let operator;
 
 // 3 scenarios operator
-// new slate 1 undef (want operator to store num1)
-// equals 2 is undef (want operator to store num2)
-// both are def (want operator to equal)
+// one where it is a brand new slate, and it is simply stored as an operator
+// two where we have an equals result, and we just want it as an operator
+// three where it is used twice in a row, where we want to display the prev result before we continue 
 
 for (let i = 0; i<operatorButtons.length; i++) {
     operatorButtons[i].addEventListener('click', () => {
-        if (num1===undefined) {
-        num1 = parseInt(displayValue);
+        if (num1===undefined && operator===undefined) {
+        num1 = parseFloat(displayValue);
         displayValue = '';
         operator = `${operatorButtons[i].id}`;
+        highlightOperator(i);
         }
-        else if (num2===undefined) {
-        num2 = parseInt(displayValue);
+        else if (num1!=undefined && num2===undefined && operator!=undefined) {
+        num2 = parseFloat(displayValue);
         displayValue = '';
-        operator = `${operatorButtons[i].id}`;
+        operate(operator, num1, num2);
+        operator=`${operatorButtons[i].id}`;
+        highlightOperator(i);
         }
         else {
         displayValue = '';
         operator = `${operatorButtons[i].id}`;
-        if (operator === '/') {
-            num1 /= num2;
-            display.textContent = num1;
-            displayValue ='';
-        }
-        else if (operator === '+') {
-            num1 += num2;
-            display.textContent = num1;
-            displayValue ='';
-        }
-        else if (operator === '-') {
-            num1 -= num2;
-            display.textContent = num1;
-            displayValue ='';
-        }
-        else if (operator === '*') {
-            num1 *= num2;
-            display.textContent = num1;
-            displayValue ='';
+        highlightOperator(i);
         };
-        num2=undefined;
-        }
     });
+};
+
+function highlightOperator(i) {
+    operatorButtons[i].classList.remove('operator');
+    operatorButtons[i].classList.add('selected');
+};
+
+function unhighlightOperator() {
+for (let i = 0; i<operatorButtons.length; i++) {
+    operatorButtons[i].classList.remove('selected');
+    operatorButtons[i].classList.add('operator');
+};
 };
 
 let equalsButton = document.querySelector('.equals');
 equalsButton.addEventListener('click', () => {
-    num2 = parseInt(displayValue);
+    num2 = parseFloat(displayValue);
     displayValue='';
-// why didn't this work as a separate function
-    if (operator === '/') {
-        num1 /= num2;
-        display.textContent = num1;
-        displayValue ='';
-    }
-    else if (operator === '+') {
-        num1 += num2;
-        display.textContent = num1;
-        displayValue ='';
-    }
-    else if (operator === '-') {
-        num1 -= num2;
-        display.textContent = num1;
-        displayValue ='';
-    }
-    else if (operator === '*') {
-        num1 *= num2;
-        display.textContent = num1;
-        displayValue ='';
-    };
-    num2=undefined;
+    operate(operator, num1, num2);
 });
 
 
@@ -100,25 +76,29 @@ clearButton.addEventListener('click', () => {
     operator=undefined;
 });
 
-function operate(operator,num1,num2) {
-    if (operator === '/') {
-        num1 /= num2;
-        display.textContent = num1;
+function operate(sign,a,b) {
+    if (sign === '/') {
+        a /= b;
+        display.textContent = Number(a.toFixed(5));
         displayValue ='';
     }
-    else if (operator === '+') {
-        num1 += num2;
-        display.textContent = num1;
+    else if (sign === '+') {
+        a += num2;
+        display.textContent = Number(a.toFixed(5));
         displayValue ='';
     }
-    else if (operator === '-') {
-        num1 -= num2;
-        display.textContent = num1;
+    else if (sign === '-') {
+        a -= num2;
+        display.textContent = Number(a.toFixed(5));
         displayValue ='';
     }
-    else if (operator === '*') {
-        num1 *= num2;
-        display.textContent = num1;
+    else if (sign === '*') {
+        a *= num2;
+        display.textContent = Number(a.toFixed(5));
         displayValue ='';
     };
+    unhighlightOperator();
+    num1 = a;
+    num2=undefined;
+    operator=undefined;
 };

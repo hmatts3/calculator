@@ -1,4 +1,13 @@
-
+.selected {
+    background-color: black;
+    color: red;
+    border-color: white;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 20px;
+    padding: 20px 20px;
+    font-weight: bolder;
+    border-radius: 20px;
+}
 
 #display {
     box-sizing: border-box;
@@ -70,7 +79,6 @@
 .equals, #clr {
     color: red;
 }
-
 
 
 .numbers {
