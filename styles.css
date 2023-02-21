@@ -3,12 +3,12 @@
 #display {
     box-sizing: border-box;
     border: 1px solid white;
-    width: 350px;
+    width: 100%;
     text-align: right;
     color: white;
-    font-size: 25px;
+    font-size: 30px;
     margin: 0 0 25px 0;
-    padding: 10px 10px;
+    padding: 20px 10px;
 }
 
 #container {
@@ -29,40 +29,46 @@
 
 #buttons {
     display:flex;
-    width: 350px;
     justify-content: space-between;
+    gap:20px;
 }
 
 #calculator {
-    padding: 25px;
+    padding: 30px 30px;
     border: 5px groove white;
     border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 
 .number{ 
-    padding: 30px;
+    padding: 30px 35px;
     border-color: white;
     color: white;
     background-color: black;
+    border-radius: 50px;
 }
 
-.operator{
-    padding: 10px;
+#clr {
+    background-color: white;
+    padding: 30px 35px;
+    font-weight: bolder;
+    color: black;
+    border-radius: 50px;
+}
+
+.operator, .equals{
+    padding: 20px 20px;
+    font-weight: bolder;
     color: black;
     background-color: white;
-    border-color: black;;
+    border-radius: 20px;
 }
 
 .equals, #clr {
     color: red;
-    padding: 5px 15px;
-    font-weight: bolder;
-}
-
-.number, .operator, #clr, .equals {
-    border-radius: 20px;
-
 }
 
 
@@ -70,12 +76,16 @@
 .numbers {
     display: flex;
     justify-content: space-around;
+    align-items: center;
     flex-wrap: wrap;
-    width: 250px;
-    align-content: space-between;
+    width: 300px;
+    align-content: center;
 }
 
 .operators {
     display: flex;
     flex-direction: column;
+    align-content: center;
+    justify-content: space-between;
+    width: 100px;
 }

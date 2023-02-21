@@ -1,112 +1,124 @@
-
 let display = document.querySelector('#display');
 
-// store number Buttons functions
-let numberButtons = document.querySelectorAll(".number");
-let buttonsList = Array.from(numberButtons);
+let numberButtons = Array.from(document.querySelectorAll(".number"));
 
-// store operator buttons functions
-let operatorButtons = document.querySelectorAll(".operator");
-let operatorsList = Array.from(operatorButtons);
+let operatorButtons = Array.from(document.querySelectorAll(".operator"));
 
+let displayValue = '';
 
-let string = '';
+let currentValue; 
 
-// number click
-for (let i = 0; i<buttonsList.length; i++) {
-    buttonsList[i].addEventListener('click', () => {
-        display.textContent = string += `${buttonsList[i].id}`;
+for (let i = 0; i<numberButtons.length; i++) {
+    numberButtons[i].addEventListener('click', () => {
+        display.textContent = displayValue += `${numberButtons[i].id}`;
     });
 };
 
 let num1;
-let operator;
-let newDisplay;
+let num2;
 
-// operator click (store as num1, clear field)
-for (let i = 0; i<operatorsList.length; i++) {
-    operatorsList[i].addEventListener('click', () => {
-        num1 = parseInt(string);
-        string= '';
-        operator = `${operatorsList[i].id}`;
-        display.textContent = '0';
+// 3 scenarios operator
+// new slate 1 undef (want operator to store num1)
+// equals 2 is undef (want operator to store num2)
+// both are def (want operator to equal)
+
+for (let i = 0; i<operatorButtons.length; i++) {
+    operatorButtons[i].addEventListener('click', () => {
+        if (num1===undefined) {
+        num1 = parseInt(displayValue);
+        displayValue = '';
+        operator = `${operatorButtons[i].id}`;
+        }
+        else if (num2===undefined) {
+        num2 = parseInt(displayValue);
+        displayValue = '';
+        operator = `${operatorButtons[i].id}`;
+        }
+        else {
+        displayValue = '';
+        operator = `${operatorButtons[i].id}`;
+        if (operator === '/') {
+            num1 /= num2;
+            display.textContent = num1;
+            displayValue ='';
+        }
+        else if (operator === '+') {
+            num1 += num2;
+            display.textContent = num1;
+            displayValue ='';
+        }
+        else if (operator === '-') {
+            num1 -= num2;
+            display.textContent = num1;
+            displayValue ='';
+        }
+        else if (operator === '*') {
+            num1 *= num2;
+            display.textContent = num1;
+            displayValue ='';
+        };
+        num2=undefined;
+        }
     });
 };
 
-// Equals Click (store as num2, operate)
 let equalsButton = document.querySelector('.equals');
 equalsButton.addEventListener('click', () => {
-    num2= parseInt(string);
-    string = '';
+    num2 = parseInt(displayValue);
+    displayValue='';
+// why didn't this work as a separate function
     if (operator === '/') {
-        display.textContent = divide(num1, num2);
+        num1 /= num2;
+        display.textContent = num1;
+        displayValue ='';
     }
     else if (operator === '+') {
-        display.textContent = add(num1, num2);
+        num1 += num2;
+        display.textContent = num1;
+        displayValue ='';
     }
     else if (operator === '-') {
-        display.textContent = subtract(num1, num2);
+        num1 -= num2;
+        display.textContent = num1;
+        displayValue ='';
     }
     else if (operator === '*') {
-        display.textContent = multiply(num1, num2);
+        num1 *= num2;
+        display.textContent = num1;
+        displayValue ='';
     };
+    num2=undefined;
 });
 
 
-// CLR click
 let clearButton = document.querySelector('#clr');
 clearButton.addEventListener('click', () => {
-    string='0';
-    display.textContent = string;
-    string='';
-})
-
-
-// still need to do:
-// string numbers together for a result
-// store prev answer and let it continue
-// lots of extra credit
-// CSS
-
-
-
-function add (num1, num2) {
-    return num1+num2;
-}
-
-function subtract (num1, num2) {
-    return num1-num2;
-}
-
-function multiply (num1, num2) {
-    return num1*num2;
-}
-
-function divide (num1, num2) {
-    return num1/num2;
-}
+    display.textContent = '0';
+    displayValue='';
+    num1=undefined;
+    num2=undefined;
+    operator=undefined;
+});
 
 function operate(operator,num1,num2) {
     if (operator === '/') {
-        divide(num1,num2);
+        num1 /= num2;
+        display.textContent = num1;
+        displayValue ='';
     }
-}
-
-function operate(operator,num1,num2) {
-    if (operator === '*') {
-        multiply(num1,num2);
+    else if (operator === '+') {
+        num1 += num2;
+        display.textContent = num1;
+        displayValue ='';
     }
-}
-
-function operate(operator,num1,num2) {
-    if (operator === '-') {
-        subtract(num1,num2);
+    else if (operator === '-') {
+        num1 -= num2;
+        display.textContent = num1;
+        displayValue ='';
     }
-}
-
-function operate(operator,num1,num2) {
-    if (operator === '+') {
-        add(num1,num2);
-    }
-}
-
+    else if (operator === '*') {
+        num1 *= num2;
+        display.textContent = num1;
+        displayValue ='';
+    };
+};
