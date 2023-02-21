@@ -147,3 +147,7 @@ document.addEventListener('keydown', (event) => {
         operate(operator, num1, num2);
     };
     });
+
+
+
+    // Can Add Backspace + +- button
