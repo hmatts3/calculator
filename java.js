@@ -112,16 +112,16 @@ document.addEventListener('keydown', (event) => {
     else if (event.key === '+' || event.key === '-' || event.key === '*' || event.key === '/') {
         let operatorKeyed;
         if (event.key==='+') {
-            operatorKeyed = document.querySelector(`#plus`);
+            operatorKeyed = document.querySelector(`.plus`);
         }
         else if (event.key==='-') {
-            operatorKeyed = document.querySelector(`#minus`);
+            operatorKeyed = document.querySelector(`.minus`);
         }
         else if (event.key==='*') {
-            operatorKeyed = document.querySelector(`#times`);
+            operatorKeyed = document.querySelector(`.times`);
         }
         else if (event.key==='/') {
-            operatorKeyed = document.querySelector(`#divide`);
+            operatorKeyed = document.querySelector(`.divide`);
         };
         if (num1===undefined && operator===undefined) {
             num1 = parseFloat(displayValue);
@@ -145,9 +145,18 @@ document.addEventListener('keydown', (event) => {
         num2 = parseFloat(displayValue);
         displayValue='';
         operate(operator, num1, num2);
-    };
+    }
+    else if (event.key==='Escape') {
+        display.textContent = '0';
+        displayValue='';
+        num1=undefined;
+        num2=undefined;
+        operator=undefined;
+        unhighlightOperator();
+    } 
     });
 
 
 
     // Can Add Backspace + +- button
+    // can disable additional decimals, double operators, or overwrite operator, 
