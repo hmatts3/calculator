@@ -12,6 +12,7 @@ for (let i = 0; i<numberButtons.length; i++) {
     numberButtons[i].addEventListener('click', () => {
         unhighlightOperator();
         display.textContent = displayValue += `${numberButtons[i].id}`;
+        equalsValue=undefined;
     });
 };
 
@@ -19,33 +20,46 @@ let num1;
 let num2;
 let operator;
 
-// 3 scenarios operator
-// one where it is a brand new slate, and it is simply stored as an operator
-// two where we have an equals result, and we just want it as an operator
-// three where it is used twice in a row, where we want to display the prev result before we continue 
+// if equalsValue is defined, we should be storing 
+// num1 is always goign to be undefinged
+
 
 for (let i = 0; i<operatorButtons.length; i++) {
     operatorButtons[i].addEventListener('click', () => {
-        if (num1===undefined && operator===undefined) {
-            num1 = parseFloat(displayValue);
-            displayValue = '';
-            operator = `${operatorButtons[i].id}`;
-            highlightOperator(i);
-            }
-        else if (num1!=undefined && num2===undefined && operator!=undefined) {
-            num2 = parseFloat(displayValue);
-            displayValue = '';
-            operate(operator, num1, num2);
-            operator=`${operatorButtons[i].id}`;
-            highlightOperator(i);
-            }
-        else {
-            displayValue = '';
-            operator = `${operatorButtons[i].id}`;
-            highlightOperator(i);
-            };
+    // stores num1 when num1 does not exist
+    if (equalsValue===undefined && num1 === undefined && operator===undefined) {
+        num1 = parseFloat(displayValue);
+        displayValue = '';
+        operator = `${operatorButtons[i].id}`;
+        highlightOperator(i);
+        }
+    // when num1 is stored, and just entering num 2 and operating instead of equal
+    else if (num1!=undefined && num2===undefined && operator!=undefined) {
+        num2 = parseFloat(displayValue);
+        displayValue = '';
+        operate(operator, num1, num2);
+        operator=`${operatorButtons[i].id}`;
+        num1=equalsValue;
+        highlightOperator(i);
+        }
+    // when you do 2 operators (1 equal), then you want to store num1 as equalsValue, so that you can continue the chain UNLESS you overwrite num1
+    // why does this work^? Because we are allowing num1 to be the equals value, then the equals value is undefined, and then below, when ......?
+    // hm
+    
+    
+    // when num1 is =
+    else {
+        num1 = equalsValue;
+        displayValue = '';
+        operator = `${operatorButtons[i].id}`;
+        highlightOperator(i);
+        };
     })        
 };
+
+function operateWithButton(p){
+    
+}
 
 function highlightOperator(i) {
     operatorButtons[i].classList.remove('operator');
@@ -77,27 +91,34 @@ clearButton.addEventListener('click', () => {
     unhighlightOperator();
 });
 
+
+let equalsValue;
+
 function operate(sign,a,b) {
     if (sign === '/') {
         a /= b;
     }
     else if (sign === '+') {
-        a += num2;
+        a += b;
     }
     else if (sign === '-') {
-        a -= num2;
+        a -= b;
         
     }
     else if (sign === '*') {
-        a *= num2;
+        a *= b;
     };
     display.textContent = Number(a.toFixed(5));
     displayValue='';
     unhighlightOperator();
-    num1 = a;
+    equalsValue= a;
+    num1=undefined;
     num2=undefined;
     operator=undefined;
 };
+
+
+
 
 
 
