@@ -8,6 +8,8 @@ let displayValue = '';
 
 let currentValue; 
 
+let equalsValue;
+
 for (let i = 0; i<numberButtons.length; i++) {
     numberButtons[i].addEventListener('click', () => {
         unhighlightOperator();
@@ -20,21 +22,25 @@ let num1;
 let num2;
 let operator;
 
-// if equalsValue is defined, we should be storing 
-// num1 is always goign to be undefinged
-
-
 for (let i = 0; i<operatorButtons.length; i++) {
     operatorButtons[i].addEventListener('click', () => {
     // stores num1 when num1 does not exist
-    if (equalsValue===undefined && num1 === undefined && operator===undefined) {
+    // when no num1 or equal value
+    if (!equalsValue && !num1) {
         num1 = parseFloat(displayValue);
         displayValue = '';
         operator = `${operatorButtons[i].id}`;
         highlightOperator(i);
         }
     // when num1 is stored, and just entering num 2 and operating instead of equal
-    else if (num1!=undefined && num2===undefined && operator!=undefined) {
+    else if (equalsValue && !num1) {
+        num1 = equalsValue;
+        displayValue = '';
+        operator = `${operatorButtons[i].id}`;
+        highlightOperator(i);
+        }
+    // (when num1 stored, operator stored, just doing a third op (new num2, calculate, new operator)
+    else if (num1 && operator) {
         num2 = parseFloat(displayValue);
         displayValue = '';
         operate(operator, num1, num2);
@@ -42,24 +48,9 @@ for (let i = 0; i<operatorButtons.length; i++) {
         num1=equalsValue;
         highlightOperator(i);
         }
-    // when you do 2 operators (1 equal), then you want to store num1 as equalsValue, so that you can continue the chain UNLESS you overwrite num1
-    // why does this work^? Because we are allowing num1 to be the equals value, then the equals value is undefined, and then below, when ......?
-    // hm
-    
-    
-    // when num1 is =
-    else {
-        num1 = equalsValue;
-        displayValue = '';
-        operator = `${operatorButtons[i].id}`;
-        highlightOperator(i);
-        };
     })        
 };
 
-function operateWithButton(p){
-    
-}
 
 function highlightOperator(i) {
     operatorButtons[i].classList.remove('operator');
@@ -74,25 +65,23 @@ for (let i = 0; i<operatorButtons.length; i++) {
 };
 
 let equalsButton = document.querySelector('.equals');
-equalsButton.addEventListener('click', () => {
+equalsButton.addEventListener('click', function() {
     num2 = parseFloat(displayValue);
     displayValue='';
     operate(operator, num1, num2);
-});
-
+    });
 
 let clearButton = document.querySelector('#clr');
-clearButton.addEventListener('click', () => {
+clearButton.addEventListener('click', function() {
     display.textContent = '0';
     displayValue='';
     num1=undefined;
     num2=undefined;
     operator=undefined;
+    equalsValue=undefined;
     unhighlightOperator();
 });
 
-
-let equalsValue;
 
 function operate(sign,a,b) {
     if (sign === '/') {
@@ -129,6 +118,7 @@ document.addEventListener('keydown', (event) => {
     if (event.key>=0 && event.key<=10) { 
     display.textContent = displayValue += event.key;
     unhighlightOperator();
+    equalsValue=undefined;
     }
     else if (event.key === '+' || event.key === '-' || event.key === '*' || event.key === '/') {
         let operatorKeyed;
@@ -144,28 +134,32 @@ document.addEventListener('keydown', (event) => {
         else if (event.key==='/') {
             operatorKeyed = document.querySelector(`.divide`);
         };
-        if (num1===undefined && operator===undefined) {
+        if (!equalsValue && !num1) {
             num1 = parseFloat(displayValue);
             displayValue = '';
             operator = `${event.key}`;
             }
-        else if (num1!=undefined && num2===undefined && operator!=undefined) {
+        // when num1 is stored, and just entering num 2 and operating instead of equal
+        else if (equalsValue && !num1) {
+            num1 = equalsValue;
+            displayValue = '';
+            operator = `${event.key}`;
+            }
+        // (when num1 stored, operator stored, just doing a third op (new num2, calculate, new operator)
+        else if (num1 && operator) {
             num2 = parseFloat(displayValue);
             displayValue = '';
             operate(operator, num1, num2);
             operator=`${event.key}`;
+            num1=equalsValue;
             }
-        else {
-            displayValue = '';
-            operator = `${event.key}`;
-            };
         operatorKeyed.classList.add('selected');
         operatorKeyed.classList.remove('operator');
     }
     else if (event.key==='=' || event.key === 'Enter') {
         num2 = parseFloat(displayValue);
         displayValue='';
-        operate(operator, num1, num2);
+        operate(operator, num1, num2);;
     }
     else if (event.key==='Escape') {
         display.textContent = '0';
@@ -173,6 +167,7 @@ document.addEventListener('keydown', (event) => {
         num1=undefined;
         num2=undefined;
         operator=undefined;
+        equalsValue=undefined;
         unhighlightOperator();
     } 
     });
@@ -181,3 +176,5 @@ document.addEventListener('keydown', (event) => {
 
     // Can Add Backspace + +- button
     // can disable additional decimals, double operators, or overwrite operator, 
+
+    //why didn't clear button op & equal button op as a separate function work?
